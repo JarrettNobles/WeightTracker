@@ -8,12 +8,13 @@
     android:paddingTop="14dp"
     android:paddingBottom="14dp">
 
-    <!-- Date column -->
+    <!-- Date column with optional camera icon -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/tv_entry_date"
@@ -23,6 +24,15 @@
             android:textColor="@color/text_primary"
             android:fontFamily="sans-serif"
             tools:text="October 26, 2023" />
+
+        <ImageView
+            android:id="@+id/iv_photo_indicator"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="6dp"
+            android:src="@drawable/ic_camera"
+            android:contentDescription="Has photo"
+            android:visibility="gone" />
     </LinearLayout>
 
     <!-- Weight and change column -->

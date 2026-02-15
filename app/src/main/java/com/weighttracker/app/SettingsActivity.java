@@ -213,6 +213,9 @@ public class SettingsActivity extends AppCompatActivity {
         boolean isMetric = radioMetric.isChecked();
         dataStore.setMetric(isMetric);
 
+        // Persist settings to database
+        dataStore.saveSettingsToDb();
+
         // Show success and go back
         Toast.makeText(this, "Settings saved successfully.", Toast.LENGTH_SHORT).show();
         finish();

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.EntryVie
     private Context context;
     private List<WeightEntry> entries;
     private OnDeleteCallback deleteCallback;
+    private OnItemClickCallback itemClickCallback;
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
 
@@ -28,10 +30,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.EntryVie
         void onDelete(int index);
     }
 
-    public HistoryAdapter(Context context, List<WeightEntry> entries, OnDeleteCallback deleteCallback) {
+    public interface OnItemClickCallback {
+        void onItemClick(int index);
+    }
+
+    public HistoryAdapter(Context context, List<WeightEntry> entries,
+                          OnDeleteCallback deleteCallback, OnItemClickCallback itemClickCallback) {
         this.context = context;
         this.entries = entries;
         this.deleteCallback = deleteCallback;
+        this.itemClickCallback = itemClickCallback;
     }
 
     /**
@@ -56,6 +64,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.EntryVie
 
         // Date
         holder.tvDate.setText(DATE_FORMAT.format(entry.getDate()));
+
+        // Show/hide camera icon based on photo
+        if (entry.getPhotoPath() != null) {
+            holder.ivPhotoIndicator.setVisibility(View.VISIBLE);
+        } else {
+            holder.ivPhotoIndicator.setVisibility(View.GONE);
+        }
 
         // Weight with unit
         String unit = dataStore.isMetric() ? "kg" : "lbs";
@@ -98,6 +113,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.EntryVie
                 deleteCallback.onDelete(position);
             }
         });
+
+        // Item click for viewing photo
+        holder.itemView.setOnClickListener(v -> {
+            if (itemClickCallback != null) {
+                itemClickCallback.onItemClick(position);
+            }
+        });
     }
 
     @Override
@@ -109,6 +131,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.EntryVie
 
     static class EntryViewHolder extends RecyclerView.ViewHolder {
         TextView tvDate;
+        ImageView ivPhotoIndicator;
         TextView tvWeight;
         TextView tvArrow;
         TextView tvChange;
@@ -117,6 +140,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.EntryVie
         EntryViewHolder(View itemView) {
             super(itemView);
             tvDate = itemView.findViewById(R.id.tv_entry_date);
+            ivPhotoIndicator = itemView.findViewById(R.id.iv_photo_indicator);
             tvWeight = itemView.findViewById(R.id.tv_entry_weight);
             tvArrow = itemView.findViewById(R.id.tv_entry_arrow);
             tvChange = itemView.findViewById(R.id.tv_entry_change);

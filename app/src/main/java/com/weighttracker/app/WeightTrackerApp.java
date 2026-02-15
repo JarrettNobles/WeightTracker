@@ -11,7 +11,7 @@ public class WeightTrackerApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        // Initialize the DataStore singleton
-        DataStore.getInstance();
+        // Initialize the DataStore singleton with application context for DB access
+        DataStore.getInstance().init(this);
     }
 }

@@ -1,8 +1,10 @@
 package com.weighttracker.app;
 
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -10,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -49,9 +52,9 @@ public class HistoryActivity extends AppCompatActivity {
 
         // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new HistoryAdapter(this, new ArrayList<>(dataStore.getWeightEntries()), (index) -> {
-            showDeleteConfirmation(index);
-        });
+        adapter = new HistoryAdapter(this, new ArrayList<>(dataStore.getWeightEntries()),
+                (index) -> showDeleteConfirmation(index),
+                (index) -> showPhotoDialog(index));
         recyclerView.setAdapter(adapter);
 
         // Tab listeners
@@ -158,6 +161,34 @@ public class HistoryActivity extends AppCompatActivity {
                     refreshData();
                 })
                 .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    /**
+     * Shows a dialog with the progress photo for the given entry, if it has one.
+     */
+    private void showPhotoDialog(int index) {
+        List<WeightEntry> allEntries = dataStore.getWeightEntries();
+        if (index < 0 || index >= allEntries.size()) return;
+
+        WeightEntry entry = allEntries.get(index);
+        if (entry.getPhotoPath() == null) return;
+
+        File photoFile = new File(entry.getPhotoPath());
+        if (!photoFile.exists()) return;
+
+        // Build a dialog with the photo
+        ImageView imageView = new ImageView(this);
+        imageView.setAdjustViewBounds(true);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        int padding = (int) (16 * getResources().getDisplayMetrics().density);
+        imageView.setPadding(padding, padding, padding, padding);
+        imageView.setImageBitmap(BitmapFactory.decodeFile(entry.getPhotoPath()));
+
+        new AlertDialog.Builder(this)
+                .setTitle("Progress Photo")
+                .setView(imageView)
+                .setPositiveButton("Close", null)
                 .show();
     }
 }

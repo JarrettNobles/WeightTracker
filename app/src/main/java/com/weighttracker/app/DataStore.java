@@ -1,17 +1,23 @@
 package com.weighttracker.app;
 
+import android.content.Context;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Singleton in-memory data store for weight entries and user settings.
- * Week 6: Data lives in memory only (no SQLite persistence yet).
+ * Singleton data store for weight entries and user settings.
+ * Backed by SQLite via DatabaseHelper, with an in-memory cache for fast access.
  */
 public class DataStore {
 
     private static DataStore instance;
 
-    // Weight entries list (most recent first)
+    // Database helper
+    private DatabaseHelper dbHelper;
+
+    // Weight entries list (most recent first) — in-memory cache
     private List<WeightEntry> weightEntries;
 
     // User settings
@@ -39,15 +45,44 @@ public class DataStore {
         return instance;
     }
 
+    /**
+     * Initializes the DataStore with a Context, creating the DatabaseHelper
+     * and loading persisted data from SQLite.
+     */
+    public void init(Context context) {
+        dbHelper = new DatabaseHelper(context.getApplicationContext());
+        // Load entries from DB into in-memory cache
+        weightEntries = dbHelper.getAllEntries();
+        // Load settings from DB
+        dbHelper.loadSettings(this);
+    }
+
     // ─── Weight Entries ─────────────────────────────────────────────────
 
     public void addEntry(WeightEntry entry) {
+        // Insert into DB and get auto-generated ID
+        if (dbHelper != null) {
+            long id = dbHelper.insertEntry(entry);
+            entry.setId(id);
+        }
         // Insert at the beginning so most recent is first
         weightEntries.add(0, entry);
     }
 
     public void removeEntry(int index) {
         if (index >= 0 && index < weightEntries.size()) {
+            WeightEntry entry = weightEntries.get(index);
+            // Delete photo file if it exists
+            if (entry.getPhotoPath() != null) {
+                File photoFile = new File(entry.getPhotoPath());
+                if (photoFile.exists()) {
+                    photoFile.delete();
+                }
+            }
+            // Delete from DB
+            if (dbHelper != null && entry.getId() != -1) {
+                dbHelper.deleteEntry(entry.getId());
+            }
             weightEntries.remove(index);
         }
     }
@@ -124,6 +159,15 @@ public class DataStore {
 
     public void setMetric(boolean metric) {
         isMetric = metric;
+    }
+
+    /**
+     * Persists the current settings to the database.
+     */
+    public void saveSettingsToDb() {
+        if (dbHelper != null) {
+            dbHelper.saveSettings(goalWeight, goalDate, gender, height, beginningWeight, isMetric);
+        }
     }
 
     // ─── Computed Statistics ────────────────────────────────────────────
