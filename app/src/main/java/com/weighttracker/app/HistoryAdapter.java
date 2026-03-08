@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
@@ -27,11 +28,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.EntryVie
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
 
     public interface OnDeleteCallback {
-        void onDelete(int index);
+        void onDelete(long entryId);
     }
 
     public interface OnItemClickCallback {
-        void onItemClick(int index);
+        void onItemClick(long entryId);
     }
 
     public HistoryAdapter(Context context, List<WeightEntry> entries,
@@ -84,40 +85,40 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.EntryVie
             if (change < 0) {
                 // Weight loss — red down arrow
                 holder.tvArrow.setText("▼");
-                holder.tvArrow.setTextColor(context.getResources().getColor(R.color.red_negative));
+                holder.tvArrow.setTextColor(ContextCompat.getColor(context, R.color.red_negative));
                 holder.tvChange.setText(String.format("-%.1f %s", Math.abs(change), unit));
-                holder.tvChange.setTextColor(context.getResources().getColor(R.color.red_negative));
+                holder.tvChange.setTextColor(ContextCompat.getColor(context, R.color.red_negative));
             } else if (change > 0) {
                 // Weight gain — green up arrow
                 holder.tvArrow.setText("▲");
-                holder.tvArrow.setTextColor(context.getResources().getColor(R.color.green_positive));
+                holder.tvArrow.setTextColor(ContextCompat.getColor(context, R.color.green_positive));
                 holder.tvChange.setText(String.format("+%.1f %s", change, unit));
-                holder.tvChange.setTextColor(context.getResources().getColor(R.color.green_positive));
+                holder.tvChange.setTextColor(ContextCompat.getColor(context, R.color.green_positive));
             } else {
                 // No change
                 holder.tvArrow.setText("—");
-                holder.tvArrow.setTextColor(context.getResources().getColor(R.color.text_hint));
+                holder.tvArrow.setTextColor(ContextCompat.getColor(context, R.color.text_hint));
                 holder.tvChange.setText(String.format("0.0 %s", unit));
-                holder.tvChange.setTextColor(context.getResources().getColor(R.color.text_hint));
+                holder.tvChange.setTextColor(ContextCompat.getColor(context, R.color.text_hint));
             }
         } else {
             // First entry ever — no previous to compare
             holder.tvArrow.setText("");
-            holder.tvChange.setText(unit);
-            holder.tvChange.setTextColor(context.getResources().getColor(R.color.text_hint));
+            holder.tvChange.setText("");
+            holder.tvChange.setTextColor(ContextCompat.getColor(context, R.color.text_hint));
         }
 
         // Delete button
         holder.btnDelete.setOnClickListener(v -> {
             if (deleteCallback != null) {
-                deleteCallback.onDelete(position);
+                deleteCallback.onDelete(entry.getId());
             }
         });
 
         // Item click for viewing photo
         holder.itemView.setOnClickListener(v -> {
             if (itemClickCallback != null) {
-                itemClickCallback.onItemClick(position);
+                itemClickCallback.onItemClick(entry.getId());
             }
         });
     }

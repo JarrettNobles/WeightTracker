@@ -5,27 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:background="@color/background_light">
 
-    <!-- Top bar with title -->
+    <!-- Top bar with back arrow and title -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="@color/background_light"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp">
+        android:background="@color/background_light">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="Back" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/settings_title"
             android:textSize="20sp"
             android:textColor="@color/text_primary"
             android:textStyle="bold"
             android:fontFamily="sans-serif-medium"
             android:gravity="center" />
+
+        <!-- Spacer to balance the back button -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
     </LinearLayout>
 
     <!-- Scrollable content -->
@@ -116,16 +129,6 @@
                             android:textColor="@color/text_secondary"
                             android:fontFamily="sans-serif" />
                     </LinearLayout>
-
-                    <!-- Goal weight info text -->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/goal_weight_info"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_hint"
-                        android:layout_marginTop="4dp"
-                        android:fontFamily="sans-serif" />
 
                     <!-- Goal Date -->
                     <TextView
@@ -304,12 +307,12 @@
                         style="@style/LabelText"
                         android:layout_marginBottom="12dp" />
 
-                    <!-- Imperial radio -->
-                    <LinearLayout
+                    <!-- Unit radio group (RadioGroup ensures mutual exclusion) -->
+                    <RadioGroup
+                        android:id="@+id/radio_group_unit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        android:orientation="vertical">
 
                         <RadioButton
                             android:id="@+id/radio_imperial"
@@ -320,15 +323,6 @@
                             android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:fontFamily="sans-serif" />
-                    </LinearLayout>
-
-                    <!-- Metric radio -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="8dp">
 
                         <RadioButton
                             android:id="@+id/radio_metric"
@@ -339,8 +333,9 @@
                             android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:fontFamily="sans-serif"
+                            android:layout_marginTop="8dp"
                             android:checked="true" />
-                    </LinearLayout>
+                    </RadioGroup>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

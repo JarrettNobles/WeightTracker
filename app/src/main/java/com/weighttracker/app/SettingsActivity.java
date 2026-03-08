@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,12 +61,17 @@ public class SettingsActivity extends AppCompatActivity {
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerGender.setAdapter(genderAdapter);
 
+        // Back button
+        findViewById(R.id.btn_back).setOnClickListener(v -> finish());
+
         // Goal date picker
         findViewById(R.id.ll_goal_date).setOnClickListener(v -> openGoalDatePicker());
 
-        // Unit preference radio buttons
-        radioMetric.setOnClickListener(v -> updateUnitLabels(true));
-        radioImperial.setOnClickListener(v -> updateUnitLabels(false));
+        // Unit preference — RadioGroup handles mutual exclusion automatically
+        RadioGroup radioGroupUnit = findViewById(R.id.radio_group_unit);
+        radioGroupUnit.setOnCheckedChangeListener((group, checkedId) -> {
+            updateUnitLabels(checkedId == R.id.radio_metric);
+        });
 
         // Save button
         findViewById(R.id.btn_save_settings).setOnClickListener(v -> saveSettings());

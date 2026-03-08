@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/background_light">
 
     <!-- Main scrollable content -->
@@ -28,22 +29,13 @@
                 android:background="@color/background_light">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="@string/main_title"
                     android:textSize="20sp"
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
                     android:fontFamily="sans-serif-medium" />
-
-                <ImageButton
-                    android:id="@+id/btn_settings_icon"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="Settings"
-                    android:src="@drawable/ic_settings" />
             </LinearLayout>
 
             <!-- Main card: current weight display -->
@@ -67,6 +59,17 @@
                     android:paddingBottom="28dp"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp">
+
+                    <!-- Current Weight label -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CURRENT WEIGHT"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_secondary"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="4dp" />
 
                     <!-- Large weight number -->
                     <LinearLayout
@@ -270,57 +273,18 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
-                    <!-- Add Weight Entry + View History row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center">
-
-                        <Button
-                            android:id="@+id/btn_add_weight_entry"
-                            android:layout_width="0dp"
-                            android:layout_height="52dp"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            android:background="@drawable/btn_primary_red"
-                            android:text="ADD WEIGHT\nENTRY"
-                            android:textColor="@color/card_white"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-medium"
-                            android:gravity="center" />
-
-                        <Button
-                            android:id="@+id/btn_view_history"
-                            android:layout_width="0dp"
-                            android:layout_height="52dp"
-                            android:layout_weight="1"
-                            android:layout_marginStart="8dp"
-                            android:background="@drawable/btn_primary_red"
-                            android:text="VIEW HISTORY"
-                            android:textColor="@color/card_white"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-medium"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <!-- Add Progress Photo button (outline style) -->
+                    <!-- Add Weight Entry button -->
                     <Button
-                        android:id="@+id/btn_add_progress_photo"
+                        android:id="@+id/btn_add_weight_entry"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/btn_outline"
-                        android:text="  ADD PROGRESS PHOTO"
-                        android:textColor="@color/text_primary"
+                        android:layout_height="52dp"
+                        android:background="@drawable/btn_primary_red"
+                        android:text="ADD WEIGHT ENTRY"
+                        android:textColor="@color/card_white"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:fontFamily="sans-serif-medium"
-                        android:gravity="center"
-                        android:drawableLeft="@drawable/ic_camera"
-                        android:drawablePadding="8dp" />
+                        android:gravity="center" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

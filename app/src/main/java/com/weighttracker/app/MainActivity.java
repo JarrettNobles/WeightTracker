@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -54,16 +55,6 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_add_weight_entry).setOnClickListener(v ->
                 startActivity(new Intent(this, AddEntryActivity.class)));
 
-        findViewById(R.id.btn_view_history).setOnClickListener(v ->
-                startActivity(new Intent(this, HistoryActivity.class)));
-
-        findViewById(R.id.btn_add_progress_photo).setOnClickListener(v -> {
-            // Progress photo will be implemented in Week 8
-        });
-
-        findViewById(R.id.btn_settings_icon).setOnClickListener(v ->
-                startActivity(new Intent(this, SettingsActivity.class)));
-
         // Tip card dismiss
         findViewById(R.id.btn_got_it).setOnClickListener(v ->
                 cardTip.setVisibility(View.GONE));
@@ -107,14 +98,15 @@ public class MainActivity extends AppCompatActivity {
                 String changeStr = formatChange(change, unit);
                 tvChange.setText("CHANGE: " + changeStr);
                 tvChange.setTextColor(change <= 0
-                        ? getResources().getColor(R.color.primary_red)
-                        : getResources().getColor(R.color.green_positive));
+                        ? ContextCompat.getColor(this, R.color.primary_red)
+                        : ContextCompat.getColor(this, R.color.green_positive));
             } else {
                 tvChange.setText("");
             }
         } else {
             tvCurrentWeight.setText("--");
-            tvLastEntry.setText("");
+            tvLastEntry.setText("No entries yet");
+            tvBmi.setText("--");
             tvChange.setText("");
         }
 

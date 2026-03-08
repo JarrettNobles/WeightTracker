@@ -63,10 +63,23 @@ public class DataStore {
         // Insert into DB and get auto-generated ID
         if (dbHelper != null) {
             long id = dbHelper.insertEntry(entry);
+            if (id == -1) {
+                // DB insert failed — do not add to in-memory list
+                return;
+            }
             entry.setId(id);
         }
         // Insert at the beginning so most recent is first
         weightEntries.add(0, entry);
+    }
+
+    public void removeEntryById(long id) {
+        for (int i = 0; i < weightEntries.size(); i++) {
+            if (weightEntries.get(i).getId() == id) {
+                removeEntry(i);
+                return;
+            }
+        }
     }
 
     public void removeEntry(int index) {
